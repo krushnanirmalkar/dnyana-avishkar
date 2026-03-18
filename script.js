@@ -62,8 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ================================
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
-    const prevBtn = document.getElementById('sliderPrev');
-    const nextBtn = document.getElementById('sliderNext');
     const progressBar = document.getElementById('sliderProgress');
 
     let currentSlide = 0;
@@ -90,10 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
         goToSlide(currentSlide + 1);
     }
 
-    function prevSlide() {
-        goToSlide(currentSlide - 1);
-    }
-
     function resetProgress() {
         progressTime = 0;
         progressBar.style.width = '0%';
@@ -111,9 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, slideDuration);
     }
 
-    nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
-    prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-
     dots.forEach(dot => {
         dot.addEventListener('click', () => {
             const target = parseInt(dot.dataset.slide, 10);
@@ -123,6 +114,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Start auto-play
     resetProgress();
+
+    // ================================
+    // HERO STAT COUNTER ANIMATION (runs once on page load)
+    // ================================
+    function animateAllHeroCounters() {
+        const allBoxes = document.querySelectorAll('.hero-stat-box');
+        allBoxes.forEach(box => {
+            const target = parseInt(box.dataset.heroCount, 10);
+            const counter = box.querySelector('.hero-counter');
+            if (!counter || !target) return;
+
+            counter.textContent = '0';
+
+            setTimeout(() => {
+                const duration = 2000;
+                const startTime = performance.now();
+
+                function step(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    const current = Math.round(eased * target);
+                    counter.textContent = current;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        counter.textContent = target;
+                        box.classList.add('counted');
+                    }
+                }
+
+                requestAnimationFrame(step);
+            }, 1200);
+        });
+    }
+
+    // Animate all counters once on page load
+    animateAllHeroCounters();
 
     // Pause on hover
     const heroSlider = document.querySelector('.hero-slider');
