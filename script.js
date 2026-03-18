@@ -58,62 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', setActiveLink, { passive: true });
 
     // ================================
-    // HERO SLIDER
+    // HERO STATIC (Slider removed)
     // ================================
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
-    const progressBar = document.getElementById('sliderProgress');
 
-    let currentSlide = 0;
-    const totalSlides = slides.length;
-    const slideDuration = 6000; // 6 seconds per slide
-    let slideTimer = null;
-    let progressTimer = null;
-    let progressTime = 0;
-    const progressStep = 30; // ms
-
-    function goToSlide(index) {
-        slides[currentSlide].classList.remove('active');
-        dots[currentSlide].classList.remove('active');
-
-        currentSlide = (index + totalSlides) % totalSlides;
-
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-
-        resetProgress();
-    }
-
-    function nextSlide() {
-        goToSlide(currentSlide + 1);
-    }
-
-    function resetProgress() {
-        progressTime = 0;
-        progressBar.style.width = '0%';
-        clearInterval(slideTimer);
-        clearInterval(progressTimer);
-
-        progressTimer = setInterval(() => {
-            progressTime += progressStep;
-            const pct = (progressTime / slideDuration) * 100;
-            progressBar.style.width = pct + '%';
-        }, progressStep);
-
-        slideTimer = setTimeout(() => {
-            nextSlide();
-        }, slideDuration);
-    }
-
-    dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-            const target = parseInt(dot.dataset.slide, 10);
-            goToSlide(target);
-        });
-    });
-
-    // Start auto-play
-    resetProgress();
 
     // ================================
     // HERO STAT COUNTER ANIMATION (runs once on page load)
